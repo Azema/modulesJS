@@ -935,17 +935,17 @@ class Show extends Media {
         btnArchive.off('click').click((e) => {
             e.stopPropagation();
             e.preventDefault();
-            if (super.debug) console.groupCollapsed('show-archive');
+            if (Media.debug) console.groupCollapsed('show-archive');
             // Met à jour le bouton d'archivage de la série
             function updateBtnArchive(promise, transform, label, notif) {
                 promise.then(() => {
                     const parent = $(e.currentTarget).parent();
                     $('span', e.currentTarget).css('transform', transform);
                     $('.label', parent).text(trans(label));
-                    if (super.debug) console.groupEnd('show-archive');
+                    if (Media.debug) console.groupEnd('show-archive');
                 }, err => {
                     notification(notif, err);
-                    if (super.debug) console.groupEnd('show-archive');
+                    if (Media.debug) console.groupEnd('show-archive');
                 });
             }
             if (! _this.user.archived) {
@@ -964,7 +964,7 @@ class Show extends Media {
         btnFavoris.off('click').click((e) => {
             e.stopPropagation();
             e.preventDefault();
-            if (super.debug) console.groupCollapsed('show-favoris');
+            if (Media.debug) console.groupCollapsed('show-favoris');
             if (! _this.user.favorited) {
                 _this.favorite()
                 .then(() => {
@@ -974,10 +974,10 @@ class Show extends Media {
                               <path d="M15.156.91a5.887 5.887 0 0 0-4.406 2.026A5.887 5.887 0 0 0 6.344.909C3.328.91.958 3.256.958 6.242c0 3.666 3.33 6.653 8.372 11.19l1.42 1.271 1.42-1.28c5.042-4.528 8.372-7.515 8.372-11.18 0-2.987-2.37-5.334-5.386-5.334z"></path>
                             </svg>
                           </span>`);
-                    if (super.debug) console.groupEnd('show-favoris');
+                    if (Media.debug) console.groupEnd('show-favoris');
                 }, err => {
                     notification('Erreur de favoris de la série', err);
-                    if (super.debug) console.groupEnd('show-favoris');
+                    if (Media.debug) console.groupEnd('show-favoris');
                 });
             } else {
                 _this.unfavorite()
@@ -988,10 +988,10 @@ class Show extends Media {
                               <path d="M14.5 0c-1.74 0-3.41.81-4.5 2.09C8.91.81 7.24 0 5.5 0 2.42 0 0 2.42 0 5.5c0 3.78 3.4 6.86 8.55 11.54L10 18.35l1.45-1.32C16.6 12.36 20 9.28 20 5.5 20 2.42 17.58 0 14.5 0zm-4.4 15.55l-.1.1-.1-.1C5.14 11.24 2 8.39 2 5.5 2 3.5 3.5 2 5.5 2c1.54 0 3.04.99 3.57 2.36h1.87C11.46 2.99 12.96 2 14.5 2c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"></path>
                             </svg>
                           </span>`);
-                    if (super.debug) console.groupEnd('show-favoris');
+                    if (Media.debug) console.groupEnd('show-favoris');
                 }, err => {
                     notification('Erreur de favoris de la série', err);
-                    if (super.debug) console.groupEnd('show-favoris');
+                    if (Media.debug) console.groupEnd('show-favoris');
                 });
             }
         });
@@ -1000,7 +1000,7 @@ class Show extends Media {
      * Ajoute la classification dans les détails de la ressource
      */
     addRating() {
-        if (super.debug) console.log('addRating');
+        if (Media.debug) console.log('addRating');
 
         if (this.rating) {
             let rating = ratings.hasOwnProperty(this.rating) ? ratings[this.rating] : '';
@@ -1194,21 +1194,21 @@ class Episode extends Media {
         const $checkSeen = this.elt.find('.checkSeen');
         let changed = false;
         if ($checkSeen.length > 0 && $checkSeen.attr('id') === undefined) {
-            if (debug) console.log('ajout de l\'attribut ID à l\'élément "checkSeen"');
+            if (Media.debug) console.log('ajout de l\'attribut ID à l\'élément "checkSeen"');
             // On ajoute l'attribut ID
             $checkSeen.attr('id', 'episode-' + this.id);
             $checkSeen.data('pos', pos);
         }
-        // if (debug) console.log('updateCheckSeen', {seen: this.user.seen, elt: this.elt, checkSeen: $checkSeen.length, classSeen: $checkSeen.hasClass('seen'), pos: pos, Episode: this});
+        // if (Media.debug) console.log('updateCheckSeen', {seen: this.user.seen, elt: this.elt, checkSeen: $checkSeen.length, classSeen: $checkSeen.hasClass('seen'), pos: pos, Episode: this});
         // Si le membre a vu l'épisode et qu'il n'est pas indiqué, on change le statut
         if (this.user.seen && $checkSeen.length > 0 && !$checkSeen.hasClass('seen')) {
-            if (debug) console.log('Changement du statut (seen) de l\'épisode %s', this.code);
+            if (Media.debug) console.log('Changement du statut (seen) de l\'épisode %s', this.code);
             this.updateRender('seen', false);
             changed = true;
         }
         // Si le membre n'a pas vu l'épisode et qu'il n'est pas indiqué, on change le statut
         else if (!this.user.seen && $checkSeen.length > 0 && $checkSeen.hasClass('seen')) {
-            if (debug) console.log('Changement du statut (notSeen) de l\'épisode %s', this.code);
+            if (Media.debug) console.log('Changement du statut (notSeen) de l\'épisode %s', this.code);
             this.updateRender('notSeen', false);
             changed = true;
         }
@@ -1265,7 +1265,7 @@ class Episode extends Media {
 
             super.callApi(method, 'episodes', 'watched', args).then(data =>
             {
-                if (super.debug) console.log('updateStatus %s episodes/watched', method, data);
+                if (Media.debug) console.log('updateStatus %s episodes/watched', method, data);
                 if (! (_this.show instanceof Show) && cache.has('shows', _this.show.id)) {
                     _this.show = new Show(cache.get('shows', _this.show.id));
                 }
@@ -1295,9 +1295,9 @@ class Episode extends Media {
                 _this.save();
             })
             .catch(err => {
-                if (debug) console.error('updateStatus error %s', err);
+                if (Media.debug) console.error('updateStatus error %s', err);
                 if (err && err == 'changeStatus') {
-                    if (debug) console.log('updateStatus error %s changeStatus', method);
+                    if (Media.debug) console.log('updateStatus error %s changeStatus', method);
                     _this.updateRender(status);
                 } else {
                     _this.toggleSpinner(false);
@@ -1317,7 +1317,7 @@ class Episode extends Media {
         const $elt = this.elt.find('.checkSeen');
         const lenEpisodes = $('#episodes .checkSeen').length;
         const lenNotSpecial = $('#episodes .checkSeen[data-special="0"]').length;
-        if (super.debug) console.log('changeStatus', {elt: $elt, status: newStatus, update: update});
+        if (Media.debug) console.log('changeStatus', {elt: $elt, status: newStatus, update: update});
         if (newStatus === 'seen') {
             $elt.css('background', ''); // On ajoute le check dans la case à cocher
             $elt.addClass('seen'); // On ajoute la classe 'seen'
@@ -1333,10 +1333,10 @@ class Episode extends Media {
                 slideCurrent
                     .removeClass('slide--notSeen')
                     .addClass('slide--seen');
-                if (super.debug) console.log('Tous les épisodes de la saison ont été vus', slideCurrent);
+                if (Media.debug) console.log('Tous les épisodes de la saison ont été vus', slideCurrent);
                 // Si il y a une saison suivante, on la sélectionne
                 if (slideCurrent.next().length > 0) {
-                    if (super.debug) console.log('Il y a une autre saison');
+                    if (Media.debug) console.log('Il y a une autre saison');
                     slideCurrent.next().trigger('click');
                     slideCurrent.removeClass('slide--current');
                 }
@@ -1399,11 +1399,11 @@ class Episode extends Media {
         if (! display) {
             $('.spinner').remove();
             fnLazy.init();
-            if (super.debug) console.log('toggleSpinner');
-            if (super.debug) console.groupEnd('episode checkSeen');
+            if (Media.debug) console.log('toggleSpinner');
+            if (Media.debug) console.groupEnd('episode checkSeen');
         } else {
-            if (super.debug) console.groupCollapsed('episode checkSeen');
-            if (super.debug) console.log('toggleSpinner');
+            if (Media.debug) console.groupCollapsed('episode checkSeen');
+            if (Media.debug) console.log('toggleSpinner');
             this.elt.find('.slide__image').prepend(`
                 <div class="spinner">
                     <div class="spinner-item"></div>
@@ -1589,7 +1589,7 @@ class Similar extends Media {
         return template + `<p>${description}</p></div>`;
     }
     getTitlePopup() {
-        if (debug) console.log('getTitlePopup', this);
+        if (Media.debug) console.log('getTitlePopup', this);
         let title = this.title;
         if (this.notes.total > 0) {
             title += ' <span style="font-size: 0.8em;color:#000;">' +
@@ -1687,7 +1687,7 @@ class Similar extends Media {
         return new Promise((resolve, reject) => {
             super.callApi('POST', _this._type.plural, _this.type.singular, params)
             .then(data => {
-                this.init(data[_this._type.singular]);
+                _this.init(data[_this._type.singular]);
                 _this.save();
                 resolve(_this);
             }, err => {
@@ -1709,7 +1709,7 @@ class Similar extends Media {
  * @return {Show}           L'objet Show
  */
 Show.prototype.fetchEpisodes = function(season, force = false) {
-    // if (debug) console.log('Show fetchEpisodes', {season: season, force: force, object: this});
+    // if (Media.debug) console.log('Show fetchEpisodes', {season: season, force: force, object: this});
     if (!season) {
         throw new Error('season required');
     }
