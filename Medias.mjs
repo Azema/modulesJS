@@ -166,7 +166,6 @@ class Media {
             </div>'
         `);
         return new Promise((resolve, reject) => {
-            window.addEventListener("message", receiveMessage, false);
             function receiveMessage(event) {
                 const origin = new URL(this.serverBaseUrl).origin;
                 // if (debug) console.log('receiveMessage', event);
@@ -175,7 +174,7 @@ class Media {
                     reject('event.origin is not %s', origin);
                     return;
                 }
-                if (event.data.message == 'access_token') {
+                if (event.data.message === 'access_token') {
                     this.token = event.data.value;
                     $('#containerIframe').remove();
                     resolve(event.data.value);
@@ -187,6 +186,7 @@ class Media {
                     window.removeEventListener("message", receiveMessage, false);
                 }
             }
+            window.addEventListener("message", receiveMessage, false);
         });
     }
 
@@ -242,36 +242,12 @@ class Media {
             check = true;
         }
 
-        return new Promise((resolve, reject) => {
-            this.counter++; // Incrément du compteur de requêtes à l'API
-            if (check) {
-                let paramsFetch = {
-                    method: 'GET',
-                    headers: myHeaders,
-                    mode: 'cors',
-                    cache: 'no-cache'
-                };
-                if (this.debug) console.info('%ccall /members/is_active', 'color:blue');
-                fetch(`${api.base}/members/is_active`, paramsFetch).then(resp => {
-                    if ( ! resp.ok) {
-                        // Appel de l'authentification pour obtenir un token valide
-                        this.authenticate().then(token => {
-                            // On met à jour le token pour le prochain appel à l'API
-                            myHeaders['X-BetaSeries-Token'] = token;
-                            fetchUri(resolve, reject);
-                        }).catch(err => reject(err) );
-                        return;
-                    }
-                    fetchUri(resolve, reject);
-                }).catch(error => {
-                    if (debug) console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
-                    console.error(error);
-                    reject(error.message);
-                });
-            } else {
-                fetchUri(resolve, reject);
-            }
-        });
+        /**
+         * Execute une requête et retourne le résultat via une promesse
+         * @param  {function} resolve Promesse de résolution
+         * @param  {function} reject  Promesse de rejet
+         * @return {void}
+         */
         function fetchUri(resolve, reject) {
             let uri = `${api.base}/${resource}/${method}`,
                 initFetch = { // objet qui contient les paramètres de la requête
@@ -337,6 +313,37 @@ class Media {
                 reject(error.message);
             });
         }
+
+        return new Promise((resolve, reject) => {
+            this.counter++; // Incrément du compteur de requêtes à l'API
+            if (check) {
+                let paramsFetch = {
+                    method: 'GET',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'no-cache'
+                };
+                if (this.debug) console.info('%ccall /members/is_active', 'color:blue');
+                fetch(`${api.base}/members/is_active`, paramsFetch).then(resp => {
+                    if ( ! resp.ok) {
+                        // Appel de l'authentification pour obtenir un token valide
+                        this.authenticate().then(token => {
+                            // On met à jour le token pour le prochain appel à l'API
+                            myHeaders['X-BetaSeries-Token'] = token;
+                            fetchUri(resolve, reject);
+                        }).catch(err => reject(err) );
+                        return;
+                    }
+                    fetchUri(resolve, reject);
+                }).catch(error => {
+                    if (debug) console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
+                    console.error(error);
+                    reject(error.message);
+                });
+            } else {
+                fetchUri(resolve, reject);
+            }
+        });
     }
 }
 /**
