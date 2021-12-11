@@ -692,6 +692,7 @@ class Show extends Media {
      */
     addShowClick(trigEpisode = false) {
         const _this = this;
+        const _super = super;
         const vignettes = $('#episodes .slide__image');
         // Vérifier si le membre a ajouter la série à son compte
         if (! this.in_account) {
@@ -712,7 +713,7 @@ class Show extends Media {
             $('#reactjs-show-actions > div > button').off('click').one('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                if (super.debug) console.groupCollapsed('AddShow');
+                if (_super.debug) console.groupCollapsed('AddShow');
 
                 _this.addToAccount()
                 .then(show => {
@@ -720,11 +721,12 @@ class Show extends Media {
                     changeBtnAdd(show);
                     // On met à jour le bloc du prochain épisode à voir
                     _this.updateNextEpisode(function() {
-                        if (super.debug) console.groupEnd('AddShow');
+                        if (_super.debug) console.groupEnd('AddShow');
                     });
                 }, err => {
+                    console.error('Error in addShowClick', err);
                     //notification('Erreur d\'ajout de la série', err);
-                    if (super.debug) console.groupEnd('AddShow');
+                    if (_super.debug) console.groupEnd('AddShow');
                 });
             });
         }
