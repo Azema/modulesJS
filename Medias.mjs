@@ -497,7 +497,7 @@ class Show extends Media {
      */
     update(force = false, cb = noop) {
         const _this = this;
-        // if (debug) console.log('Show update', this);
+        // if (Media.debug) console.log('Show update', this);
         return new Promise((resolve, reject) => {
             _this.fetch(force).then(data => {
                 _this.init(data.show);
@@ -523,7 +523,7 @@ class Show extends Media {
         this.updateProgressBar();
         this.updateNextEpisode();
         let note = this.objNote;
-        if (super.debug) {
+        if (Media.debug) {
             console.log('Next ID et status', {
                 next: this.user.next.id,
                 status: this.status,
@@ -537,7 +537,7 @@ class Show extends Media {
             // On propose d'archiver si la série n'est plus en production
             if (this.in_account && this.isEnded() && !this.isArchived())
             {
-                if (super.debug) console.log('Série terminée, popup confirmation archivage');
+                if (Media.debug) console.log('Série terminée, popup confirmation archivage');
                 promise = new Promise(resolve => {
                     new PopupAlert({
                         title: 'Archivage de la série',
@@ -555,7 +555,7 @@ class Show extends Media {
             }
             // On propose de noter la série
             if (note.user === 0) {
-                if (super.debug) console.log('Proposition de voter pour la série');
+                if (Media.debug) console.log('Proposition de voter pour la série');
                 promise.then(() => {
                     new PopupAlert({
                         title: trans("popin.note.title.show"),
@@ -580,7 +580,7 @@ class Show extends Media {
      * @return {void}
      */
     updateProgressBar() {
-        if (super.debug) console.log('updateProgressBar');
+        if (Media.debug) console.log('updateProgressBar');
         let progBar = $('.progressBarShow');
         // On met à jour la barre de progression
         progBar.css('width', this.user.status.toFixed(1) + '%');
@@ -590,11 +590,11 @@ class Show extends Media {
      * @return {void}
      */
     updateNextEpisode(cb = noop) {
-        if (super.debug) console.log('updateNextEpisode');
+        if (Media.debug) console.log('updateNextEpisode');
         const nextEpisode = $('a.blockNextEpisode');
 
         if (nextEpisode.length > 0 && this.user.next && this.user.next.id !== null) {
-            if (super.debug) console.log('nextEpisode et show.user.next OK', this.user);
+            if (Media.debug) console.log('nextEpisode et show.user.next OK', this.user);
             // Modifier l'image
             const img = nextEpisode.find('img'),
                   remaining = nextEpisode.find('.remaining div'),
@@ -613,7 +613,7 @@ class Show extends Media {
             remaining.text(remaining.text().trim().replace(/^\d+/, this.user.remaining));
         }
         else if (nextEpisode.length <= 0 && this.user.next && this.user.next.id !== null) {
-            if (super.debug) console.log('No nextEpisode et show.user.next OK', this.user);
+            if (Media.debug) console.log('No nextEpisode et show.user.next OK', this.user);
             buildNextEpisode(this);
         }
         else if (! this.user.next || this.user.next.id === null) {
@@ -692,7 +692,6 @@ class Show extends Media {
      */
     addShowClick(trigEpisode = false) {
         const _this = this;
-        const _super = super;
         const vignettes = $('#episodes .slide__image');
         // Vérifier si le membre a ajouter la série à son compte
         if (! this.in_account) {
