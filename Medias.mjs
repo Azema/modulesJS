@@ -713,7 +713,7 @@ class Show extends Media {
             $('#reactjs-show-actions > div > button').off('click').one('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                if (_super.debug) console.groupCollapsed('AddShow');
+                if (Media.debug) console.groupCollapsed('AddShow');
 
                 _this.addToAccount()
                 .then(show => {
@@ -721,12 +721,12 @@ class Show extends Media {
                     changeBtnAdd(show);
                     // On met à jour le bloc du prochain épisode à voir
                     _this.updateNextEpisode(function() {
-                        if (_super.debug) console.groupEnd('AddShow');
+                        if (Media.debug) console.groupEnd('AddShow');
                     });
                 }, err => {
                     console.error('Error in addShowClick', err);
                     //notification('Erreur d\'ajout de la série', err);
-                    if (_super.debug) console.groupEnd('AddShow');
+                    if (Media.debug) console.groupEnd('AddShow');
                 });
             });
         }
