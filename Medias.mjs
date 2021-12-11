@@ -1715,7 +1715,7 @@ Show.prototype.fetchEpisodes = function(season, force = false) {
     }
     const _this = this;
     return new Promise((resolve, reject) => {
-        super.callApi('GET', 'shows', 'episodes', {thetvdb_id: this.thetvdb_id, season: season}, true)
+        Media.callApi('GET', 'shows', 'episodes', {thetvdb_id: this.thetvdb_id, season: season}, true)
         .then(data => {
             _this.current_season = season;
             _this.episodes = [];
@@ -1738,7 +1738,7 @@ Show.prototype.fetchSimilars = function() {
     const _this = this;
     this.similars = [];
     return new Promise((resolve, reject) => {
-        super.callApi('GET', 'shows', 'similars', {thetvdb_id: this.thetvdb_id, details: true}, true)
+        Media.callApi('GET', 'shows', 'similars', {thetvdb_id: this.thetvdb_id, details: true}, true)
         .then(data => {
             if (data.similars.length > 0) {
                 for (let s = 0; s < data.similars.length; s++) {
@@ -1760,7 +1760,7 @@ Movie.prototype.fetchSimilars = function() {
     const _this = this;
     this.similars = [];
     return new Promise((resolve, reject) => {
-        super.callApi('GET', 'movies', 'similars', {id: this.id, details: true}, true)
+        Media.callApi('GET', 'movies', 'similars', {id: this.id, details: true}, true)
         .then(data => {
             if (data.similars.length > 0) {
                 for (let s = 0; s < data.similars.length; s++) {
