@@ -2,7 +2,7 @@
 
 /* globals $:false */
 
-import Cache from './cache.mjs';
+import { Cache } from './cache.mjs';
 
 const api = {
   base: 'https://api.betaseries.com',
